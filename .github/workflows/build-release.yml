@@ -3,7 +3,7 @@ name: Build and Release APK
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
 
 permissions:
@@ -23,8 +23,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -40,7 +40,8 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          flutter-version: "3.47.0"
+          channel: "stable"
           cache: true
 
       - name: Install Dependencies
@@ -83,7 +84,7 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: todo-list-${{ steps.get_version.outputs.version }}
+          name: todo-${{ steps.get_version.outputs.version }}
           path: build/app/outputs/flutter-apk/app-release.apk
 
   release:
@@ -99,7 +100,7 @@ jobs:
       - name: Download APK
         uses: actions/download-artifact@v4
         with:
-          name: todo-list-${{ needs.build.outputs.version }}
+          name: todo-${{ needs.build.outputs.version }}
           path: ./
 
       - name: Create Release
@@ -107,7 +108,7 @@ jobs:
         with:
           files: app-release.apk
           body: |
-            ## Todo List v${{ needs.build.outputs.version }}
+            ## ToDo v${{ needs.build.outputs.version }}
 
             ### 📱 Download
             Download the APK below and install on your Android device.
@@ -115,6 +116,11 @@ jobs:
             ### ✨ What's New
             - Automated build via GitHub Actions
             - Release signed with production keystore
+
+            ### 🔒 Security
+            - Signed with release keystore
+            - Firebase configured for production
+            - Firestore security rules enabled
           draft: false
           prerelease: false
         env:
